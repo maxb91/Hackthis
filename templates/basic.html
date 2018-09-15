@@ -1,10 +1,19 @@
-<html>
-    <body>
-        <h1>'Hello World'</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Dropdown</title>
+</head>
+<body>
+    <form class="form-inline" method="POST" action="{{ url_for('result') }}">
         <select name= colours method="GET" action="/">
             {% for select in selections %}
             <option value= "{{select}}" SELECTED>{{select}}</option>"
             {% endfor %}
         </select>
-    </body>
+
+       <input name="text">
+        <button type="submit" class="btn btn-default">Add</button>
+    </form>
+</body>
 </html>
