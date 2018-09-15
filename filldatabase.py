@@ -1,7 +1,7 @@
 from main import db
 # db.create_all()
 
-from main import Purchases, ReferenceValues, ReferenceValuesUnits
+from datatypes import Purchases, ReferenceValues, ReferenceValuesUnits
 purchase1 = Purchases(category = 'Almonds', amount = 1.0, globalWarmingPotential = 1.0, energyConsumption = 2.0, waterUsage = 3.0)
 # db.add(purchase1)
 
