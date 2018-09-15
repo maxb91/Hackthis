@@ -8,15 +8,12 @@
 	<thead>
 		<tr>
 			<th scope="col">Food type</th>
-			<th scope="col">Amount</th>
 			<th scope="col">Global Warming Potential</th>
 			<th scope="col">Energy Consumption</th>
 			<th scope="col">Water Usage</th>
-			<th scope="col">Date added</th>
 		</tr>
 		<tr>
 			<th scope="col">Unit</th>
-			<th scope="col">1</th>
 			{% for ref_unit in ref_units %}
 			<th scope="col">{{ref_unit}}</th>
 			{% endfor %}
@@ -26,11 +23,9 @@
 		{% for purchase in purchases %}
 		<tr>
 			<th scope="row">{{ purchase.category }}</th>
-			<td>{{ purchase.amount }}</td>
 			<td>{{ purchase.globalWarmingPotential }}</td>
 			<td>{{ purchase.energyConsumption }}</td>
 			<td>{{ purchase.waterUsage }}</td>
-			<td>{{ purchase.dateAdded }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
