@@ -13,6 +13,13 @@
 			<th scope="col">Energy Consumption</th>
 			<th scope="col">Water Usage</th>
 		</tr>
+		<tr>
+			<th scope="col">Unit</th>
+			<th scope="col">1</th>
+			{% for ref_unit in ref_units %}
+			<th scope="col">{{ref_unit}}</th>
+			{% endfor %}
+		</tr>
 	</thead>
 	<tbody>
 		{% for purchase in purchases %}

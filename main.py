@@ -65,9 +65,10 @@ def about():
 @app.route('/view_list')
 def view_list():
   print "Querying"
-  abc = Purchases.query.all()
-  print "Purchases are ", abc
-  return render_template('view_list.html', purchases = abc)
+  purch = Purchases.query.all()
+  ref_val_unit = ReferenceValuesUnits.query.first()
+  units = [ref_val_unit.globalWarmingPotential, ref_val_unit.energyConsumption, ref_val_unit.waterUsage]
+  return render_template('view_list.html', purchases = purch, ref_units = units)
 
 @app.route('/result', methods = ['GET', 'POST'])
 def result():
