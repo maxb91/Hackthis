@@ -1,5 +1,10 @@
 <html>
     <body>
         <h1>'Hello World'</h1>
+        <select name= colours method="GET" action="/">
+            {% for select in selections %}
+            <option value= "{{select}}" SELECTED>{{select}}</option>"
+            {% endfor %}
+        </select>
     </body>
 </html>
