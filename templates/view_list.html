@@ -7,17 +7,21 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th scope="col">#</th>
 			<th scope="col">Food type</th>
-			<th scope="col">Impact</th>
+			<th scope="col">Amount</th>
+			<th scope="col">Global Warming Potential</th>
+			<th scope="col">Energy Consumption</th>
+			<th scope="col">Water Usage</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for food in foods %}
+		{% for purchase in purchases %}
 		<tr>
-			<th scope="row">{{ food.id }}</th>
-			<td>{{ food.title }}</td>
-			<td>{{ food.impact }}</td>
+			<th scope="row">{{ purchase.category }}</th>
+			<td>{{ purchase.amount }}</td>
+			<td>{{ purchase.globalWarmingPotential }}</td>
+			<td>{{ purchase.energyConsumption }}</td>
+			<td>{{ purchase.waterUsage }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

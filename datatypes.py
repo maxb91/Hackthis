@@ -1,14 +1,5 @@
-from flask import Flask, render_template, request
-from flask_sqlalchemy import SQLAlchemy
-import pandas as pd
-from data import Foods
+from main import db
 import datetime
-
-EmissionData = pd.read_excel('EmissionValues.xlsx')
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///purchases.sqlite3'
-db = SQLAlchemy(app)
 
 class Purchases(db.Model):
   id = db.Column('entry_id', db.Integer, primary_key = True)
@@ -52,34 +43,3 @@ class ReferenceValuesUnits(db.Model):
     self.energyConsumption = energyConsumption
   def __repr__(self):
     return "ReferenceValues('{self.globalWarmingPotential}', '{self.energyConsumption}', '{self.waterUsage}')"
-
-@app.route('/')
-def index():
-  Selections = EmissionData['Category'].dropna()
-  return render_template('index.html', selections = Selections)
-
-@app.route('/about')
-def about():
-  return render_template('about.html')
-
-@app.route('/view_list')
-def view_list():
-  print "Querying"
-  abc = Purchases.query.all()
-  print "Purchases are ", abc
-  return render_template('view_list.html', purchases = abc)
-
-@app.route('/result', methods = ['GET', 'POST'])
-def result():
-  amount = float(request.form['text'])
-  sel_category = request.form['foodtype']
-  ref_val = ReferenceValues.query.filter_by(category=sel_category).first()
-  purchase = Purchases(category = sel_category, amount = amount, globalWarmingPotential = amount*ref_val.globalWarmingPotential, 
-                        energyConsumption = amount*ref_val.energyConsumption, waterUsage = amount*ref_val.waterUsage)
-  db.session.add(purchase)
-  db.session.commit()  
-  print "Added."
-  return("Added item.")
-
-if __name__ == '__main__':
-	app.run(debug = True)
