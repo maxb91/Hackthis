@@ -24,6 +24,11 @@ class ReferenceValues(db.Model):
   globalWarmingPotential = db.Column(db.Float)
   energyConsumption = db.Column(db.Float)
   waterUsage = db.Column(db.Float)
+  def __init__(self, category = None, globalWarmingPotential = None, energyConsumption = None, waterUsage = None):
+    self.category = category
+    self.globalWarmingPotential = globalWarmingPotential
+    self.energyConsumption = energyConsumption
+    self.waterUsage = waterUsage
   def __repr__(self):
     return "ReferenceValues('{self.category}', '{self.globalWarmingPotential}', '{self.energyConsumption}', '{self.waterUsage}')"
 
@@ -32,5 +37,9 @@ class ReferenceValuesUnits(db.Model):
   globalWarmingPotential = db.Column(db.Float)
   energyConsumption = db.Column(db.Float)
   waterUsage = db.Column(db.Float)
+  def __init__(self, globalWarmingPotential = None, energyConsumption = None, waterUsage = None):
+    self.waterUsage = waterUsage
+    self.globalWarmingPotential = globalWarmingPotential
+    self.energyConsumption = energyConsumption
   def __repr__(self):
     return "ReferenceValues('{self.globalWarmingPotential}', '{self.energyConsumption}', '{self.waterUsage}')"
