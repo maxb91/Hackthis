@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	Selections = EmissonData['Category']
+	Selections = EmissonData['Category'].dropna()
 	return render_template('basic.html', selections = Selections)
 
 @app.route('/test', methods = ['GET', 'POST'])
