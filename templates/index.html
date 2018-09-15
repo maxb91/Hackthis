@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Environmental Impact Calculator</h1>
+          <p>This tool is made to let you calculate the environmental impact of your eating habits.</p>
+          <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p> -->
+        </div>
+</div>
+
+<form class="form-inline my-2 my-lg-0" method="POST" action="{{ url_for('result') }}">
+	<select name= foodtype method="GET" action="/">
+	    {% for select in selections %}
+	    <option value= "{{select}}" SELECTED>{{select}}</option>"
+	    {% endfor %}
+	</select>
+  <input class="form-control mr-sm-2" type="text" name="text" placeholder="Search" aria-label="Search">	
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
+</form>
+
+{% endblock %}
