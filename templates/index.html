@@ -9,14 +9,71 @@
         </div>
 </div>
 
-<form class="form-inline my-2 my-lg-0" method="POST" action="{{ url_for('result') }}">
-	<select name= foodtype method="GET" action="/">
+<form class="form-inline my-2 my-lg-0">
+	<select method="GET" action="/" id="categorySelected">
 	    {% for select in selections %}
-	    <option value= "{{select}}" SELECTED>{{select}}</option>"
+	    <option value= "{{select}}">{{select}}</option>"
 	    {% endfor %}
 	</select>
-  <input class="form-control mr-sm-2" type="text" name="text" placeholder="Search" aria-label="Search">	
-  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
+  <input id = "amountProvided" class="form-control mr-sm-2" type="text" name="text" placeholder="Search" aria-label="Search">	
 </form>
+<button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="AddPurchase()">Add</button>
+<br>
+<br>
+<form method="POST" action="{{ url_for('result')}}">
+    <table id="myTable" class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Amount</th>
+              </tr>
+        </thead>
+      </table>
+      <br>
+</form>
+<button class="btn btn-outline-success my-2 my-sm-0" onclick="SendData()">Submit</button>
 
+
+<script>
+    function AddPurchase() {
+        var table = document.getElementById("myTable");
+        var row = table.insertRow(-1);
+        var category = row.insertCell(-1);
+        var amount = row.insertCell(-1);
+        
+        category.name = "foodtype[]";
+        category.innerHTML =  document.getElementById("categorySelected").value;
+        amount.name = "amount[]";
+        amount.innerHTML = document.getElementById("amountProvided").value;
+    }
+
+    function SendData() {
+        var table = document.getElementById("myTable");
+        var obj = {};
+        var row, rows = table.rows;
+        for (var i=1, iLen=rows.length; i<iLen; i++) {
+            row = rows[i];
+            obj[row.cells[0].textContent] = Number(row.cells[1].textContent)
+        }
+        
+        var data = {};
+        data['data'] = obj;
+        console.log(data);
+        // var data = JSON.stringify(obj);
+        // $.post("/receivedata", {javascript_data: "Luca"});
+        $.post("/receivedata", obj)
+        return
+    }
+    </script>
+<!--
+<form class="form-inline my-2 my-lg-0" method="POST" action="{{ url_for('result') }}">
+    <select name= foodtype method="GET" action="/">
+        {% for select in selections %}
+        <option value= "{{select}}" SELECTED>{{select}}</option>"
+        {% endfor %}
+    </select>
+    <input class="form-control mr-sm-2" type="text" name="text" placeholder="Search" aria-label="Search">	
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
+  </form>
+-->
 {% endblock %}

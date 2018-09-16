@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import pandas as pd
 from data import Foods
+import requests
 
 Foods = Foods()
 EmissonData = pd.read_excel('EmissionValues.xlsx')
@@ -20,10 +21,18 @@ def about():
 def view_list():
   return render_template('view_list.html', foods = Foods)
 
-@app.route('/result', methods = ['GET', 'POST'])
+@app.route('/result', methods = ['POST'])
 def result():
 	print ("printing results")
-	return(request.form['foodtype'] + ' | ' + request.form['text'])
+	test = request.form['javascript_data']
+	return test
+
+@app.route('/receivedata', methods = ['POST'])
+def receive_data():
+	#data = request.json['data']
+	for k in request.form.keys():
+		print(k + request.form[k])
+	return "data"
 
 if __name__ == '__main__':
 	app.run(debug = True)
