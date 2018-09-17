@@ -76,6 +76,16 @@ def overview():
   units = ['kg of CO2', 'MJ', 'm^3']
   return render_template('overview.html', purchases = purch, ref_units = units)
 
+@app.route('/piechart')
+def piechart():
+  purch = Purchases.query.all()
+  return render_template('piechart.html', purchases = purch)
+
+@app.route('/barchart')
+def barchart():
+  purch = Purchases.query.all()
+  return render_template('barchart.html', purchases = purch)
+
 @app.route('/result', methods = ['GET', 'POST'])
 def result():
   amount = float(request.form['text'])
