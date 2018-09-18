@@ -64,14 +64,14 @@ def about():
 
 @app.route('/view_list')
 def view_list():
-  print "Querying"
+  # print "Querying"
   purch = Purchases.query.all()
   units = ['kg of CO2', 'MJ', 'm^3']
   return render_template('view_list.html', purchases = purch, ref_units = units)
 
 @app.route('/overview')
 def overview():
-  print "Querying"
+  # print "Querying"
   purch = ReferenceValues.query.all()
   units = ['kg of CO2', 'MJ', 'm^3']
   return render_template('overview.html', purchases = purch, ref_units = units)
@@ -91,7 +91,7 @@ def result():
   amount = float(request.form['text'])
   sel_category = request.form['foodtype']
   ref_val = ReferenceValues.query.filter_by(category=sel_category).first()
-  print ref_val.energyConsumption
+  # print ref_val.energyConsumption
   if ref_val.energyConsumption == None:
     ref_val.energyConsumption = 0
     ref_val.waterUsage = 0
@@ -99,7 +99,7 @@ def result():
                         energyConsumption = round(amount*ref_val.energyConsumption,2), waterUsage = round(amount*ref_val.waterUsage,2))
   db.session.add(purchase)
   db.session.commit()
-  print "Added."
+  # print "Added."
   return redirect("view_list", code=302)
 
 if __name__ == '__main__':
