@@ -45,7 +45,7 @@
         category.innerHTML =  document.getElementById("categorySelected").value;
         amount.name = "amount[]";
         amount.innerHTML = document.getElementById("amountProvided").value;
-    }
+    };
 
     function SendData() {
         var table = document.getElementById("myTable");
@@ -53,17 +53,13 @@
         var row, rows = table.rows;
         for (var i=1, iLen=rows.length; i<iLen; i++) {
             row = rows[i];
-            obj[row.cells[0].textContent] = Number(row.cells[1].textContent)
+            obj[row.cells[0].textContent] = Number(row.cells[1].textContent);
         }
-        
-        var data = {};
-        data['data'] = obj;
-        console.log(data);
-        // var data = JSON.stringify(obj);
-        // $.post("/receivedata", {javascript_data: "Luca"});
-        $.post("/receivedata", obj)
-        return
-    }
+        console.log(JSON.stringify(obj));
+        $.post("/results", 
+          {purchases: JSON.stringify(obj)},
+          function() {window.location.replace("/view_list")});
+    };
     </script>
 <!--
 <form class="form-inline my-2 my-lg-0" method="POST" action="{{ url_for('result') }}">

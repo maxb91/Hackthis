@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from data import Foods
 import datetime
+import json
 
 EmissionData = pd.read_excel('EmissionValues.xlsx')
 
@@ -86,21 +87,26 @@ def barchart():
   purch = Purchases.query.all()
   return render_template('barchart.html', purchases = purch)
 
-@app.route('/result', methods = ['GET', 'POST'])
-def result():
-  amount = float(request.form['text'])
-  sel_category = request.form['foodtype']
-  ref_val = ReferenceValues.query.filter_by(category=sel_category).first()
-  # print ref_val.energyConsumption
-  if ref_val.energyConsumption == None:
-    ref_val.energyConsumption = 0
-    ref_val.waterUsage = 0
-  purchase = Purchases(category = sel_category, amount = amount, globalWarmingPotential = round(amount*ref_val.globalWarmingPotential,2), 
-                        energyConsumption = round(amount*ref_val.energyConsumption,2), waterUsage = round(amount*ref_val.waterUsage,2))
-  db.session.add(purchase)
+@app.route('/results', methods = ['POST'])
+def result(): 
+  # Looping through the received object and adding all the elements to the array newData
+  newData = []
+  # Getting the response and converting it to an object
+  postData = json.loads(request.form['purchases'])
+  # Looping through the dict and adding the values to the newData list
+  for key in postData:
+    ref_val = ReferenceValues.query.filter_by(category=key).first()
+    # Making sure to not multiply by 'NaN'
+    if ref_val.energyConsumption == None:
+      ref_val.energyConsumption = 0
+      ref_val.waterUsage = 0
+    newData.append(Purchases(category = key, amount = postData[key], globalWarmingPotential = round(postData[key]*ref_val.globalWarmingPotential,2), 
+                        energyConsumption = round(postData[key]*ref_val.energyConsumption,2), waterUsage = round(postData[key]*ref_val.waterUsage,2)))
+  
+  db.session.bulk_save_objects(newData)
   db.session.commit()
   # print "Added."
-  return redirect("view_list", code=302)
+  return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
 if __name__ == '__main__':
 	app.run(debug = True)
