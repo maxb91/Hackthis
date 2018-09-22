@@ -15,3 +15,8 @@ eval('referenceValues'+str(index)+'=ReferenceValues('+row['category']+','+row['G
 db.add(purchase1)
 db.add(units)
 db.add(referenceValues)
+
+# libraries included
+bootstrap.js
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>

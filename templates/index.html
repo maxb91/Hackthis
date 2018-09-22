@@ -34,24 +34,31 @@
 </form>
 <button class="btn btn-outline-success my-2 my-sm-0" onclick="SendData()">Submit</button>
 
-
 <script>
     function AddPurchase() {
-        var table = document.getElementById("myTable");
-        var row = table.insertRow(-1);
-        var category = row.insertCell(-1);
-        var amount = row.insertCell(-1);
-        var removeButtonSpot = row.insertCell(-1);
-        var removeButton = document.createElement("button");
-        removeButton.className = "close"
-        removeButton.innerText = $('<div/>').html('&times;').text();
-        removeButton.addEventListener("click", function () { RemoveRow(removeButton); }, false);
-        removeButton.name = table.rows;
+        var enteredAmount = document.getElementById("amountProvided").value;
+        var enteredCategory = document.getElementById("categorySelected").value;
+        if (enteredAmount != '') {
+            var table = document.getElementById("myTable");
+            var row = table.insertRow(-1);
+            var category = row.insertCell(-1);
+            var amount = row.insertCell(-1);
+            var removeButtonSpot = row.insertCell(-1);
+            var removeButton = document.createElement("button");
+            removeButton.className = "close"
+            removeButton.innerText = $('<div/>').html('&times;').text();
+            removeButton.addEventListener("click", function () { RemoveRow(removeButton); }, false);
+            removeButton.name = table.rows;
+            
+            category.innerHTML =  enteredCategory;
+            amount.innerHTML = enteredAmount;
+            document.getElementById("amountProvided").value = '';
+            removeButtonSpot.appendChild(removeButton);
+        } else {
+            alert('Please provide the amount of ' + enteredCategory + 
+                    ' you purchased');
+        }
         
-        category.innerHTML =  document.getElementById("categorySelected").value;
-        amount.innerHTML = document.getElementById("amountProvided").value;
-        document.getElementById("amountProvided").value = '';
-        removeButtonSpot.appendChild(removeButton);
         event.preventDefault();
     };
 
@@ -72,5 +79,7 @@
     function RemoveRow(buttonClicked) {
         $(buttonClicked).closest('tr').remove();
     };
+
+    function printTest() {console.log('Yallo')};
     </script>
 {% endblock %}

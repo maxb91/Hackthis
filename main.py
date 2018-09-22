@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from data import Foods
 import datetime
-import json
 
-EmissionData = pd.read_excel('EmissionValues.xlsx')
+
+isDebug = True
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///purchases.sqlite3'
@@ -54,9 +54,10 @@ class ReferenceValuesUnits(db.Model):
   def __repr__(self):
     return "ReferenceValues('{self.globalWarmingPotential}', '{self.energyConsumption}', '{self.waterUsage}')"
 
-@app.route('/')
+@app.route('/home')
 def index():
-  Selections = EmissionData['Category'].dropna()
+  # Selections = EmissionData['Category'].dropna()
+  Selections = [keys.category for keys in ReferenceValues.query.all()]
   return render_template('index.html', selections = Selections)
 
 @app.route('/about')
@@ -65,48 +66,25 @@ def about():
 
 @app.route('/view_list')
 def view_list():
-  # print "Querying"
   purch = Purchases.query.all()
-  units = ['kg of CO2', 'MJ', 'm^3']
+  ref_val_unit = ReferenceValuesUnits.query.first()
+  units = [ref_val_unit.globalWarmingPotential, ref_val_unit.energyConsumption, ref_val_unit.waterUsage]
   return render_template('view_list.html', purchases = purch, ref_units = units)
 
-@app.route('/overview')
-def overview():
-  # print "Querying"
-  purch = ReferenceValues.query.all()
-  units = ['kg of CO2', 'MJ', 'm^3']
-  return render_template('overview.html', purchases = purch, ref_units = units)
-
-@app.route('/piechart')
-def piechart():
-  purch = Purchases.query.all()
-  return render_template('piechart.html', purchases = purch)
-
-@app.route('/barchart')
-def barchart():
-  purch = Purchases.query.all()
-  return render_template('barchart.html', purchases = purch)
-
-@app.route('/results', methods = ['POST'])
-def result(): 
-  # Looping through the received object and adding all the elements to the array newData
-  newData = []
-  # Getting the response and converting it to an object
-  postData = json.loads(request.form['purchases'])
-  # Looping through the dict and adding the values to the newData list
-  for key in postData:
-    ref_val = ReferenceValues.query.filter_by(category=key).first()
-    # Making sure to not multiply by 'NaN'
-    if ref_val.energyConsumption == None:
-      ref_val.energyConsumption = 0
-      ref_val.waterUsage = 0
-    newData.append(Purchases(category = key, amount = postData[key], globalWarmingPotential = round(postData[key]*ref_val.globalWarmingPotential,2), 
-                        energyConsumption = round(postData[key]*ref_val.energyConsumption,2), waterUsage = round(postData[key]*ref_val.waterUsage,2)))
-  
-  db.session.bulk_save_objects(newData)
-  db.session.commit()
-  # print "Added."
-  return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+@app.route('/result', methods = ['GET', 'POST'])
+def result():
+  amount = float(request.form['text'])
+  sel_category = request.form['foodtype']
+  ref_val = ReferenceValues.query.filter_by(category=sel_category).first()
+  purchase = Purchases(category = sel_category, amount = amount, globalWarmingPotential = amount*ref_val.globalWarmingPotential, 
+                        energyConsumption = amount*ref_val.energyConsumption, waterUsage = amount*ref_val.waterUsage)
+  db.session.add(purchase)
+  db.session.commit()  
+  return("Added item.")
 
 if __name__ == '__main__':
-	app.run(debug = True)
+  if isDebug == True:
+    app.run(debug = True, host='0.0.0.0')
+  else:
+    app.run(host='0.0.0.0')
+	
