@@ -56,7 +56,6 @@ class ReferenceValuesUnits(db.Model):
 
 @app.route('/home')
 def index():
-  # Selections = EmissionData['Category'].dropna()
   Selections = [keys.category for keys in ReferenceValues.query.all()]
   return render_template('index.html', selections = Selections)
 
@@ -71,7 +70,7 @@ def view_list():
   units = [ref_val_unit.globalWarmingPotential, ref_val_unit.energyConsumption, ref_val_unit.waterUsage]
   return render_template('view_list.html', purchases = purch, ref_units = units)
 
-@app.route('/result', methods = ['GET', 'POST'])
+@app.route('/results', methods = ['POST'])
 def result():
   amount = float(request.form['text'])
   sel_category = request.form['foodtype']
@@ -82,9 +81,29 @@ def result():
   db.session.commit()  
   return("Added item.")
 
+@app.route('/piechart')
+def piechart():
+  purch = Purchases.query.all()
+  return render_template('piechart.html', purchases = purch)
+
+@app.route('/barchart')
+def barchart():
+  purch = Purchases.query.all()
+  return render_template('barchart.html', purchases = purch)
+
+@app.route('/overview')
+def overview():
+  purch = Purchases.query.all()
+  ref_val_unit = ReferenceValuesUnits.query.first()
+  units = [ref_val_unit.globalWarmingPotential, ref_val_unit.energyConsumption, ref_val_unit.waterUsage]
+  return render_template('overview.html', purchases = purch, ref_units = units)  
+
+@app.route('/testData')
+def provideList():
+  return "Yallo"
+
 if __name__ == '__main__':
   if isDebug == True:
     app.run(debug = True, host='0.0.0.0')
   else:
     app.run(host='0.0.0.0')
-	

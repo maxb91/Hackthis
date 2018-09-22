@@ -3,7 +3,8 @@
 {% block body %}
 <h1>List</h1>
 <p>This shows a list of all items that have been added already. Including impact information. Maybe also date and time of when it was added. Maybe some more statistics.</p>
-
+<br>
+<button onclick="testingComm()">Try</button>
 <table class="table">
 	<thead>
 		<tr>
@@ -41,4 +42,23 @@
 		</tr>
 	</tfoot>
 </table>
+<table id='TestingT'>
+	<thead>
+			<tr>
+				<th scope="col">Food type</th>
+				<th scope="col">Amount</th>
+				<th scope="col">Global Warming Potential</th>
+				<th scope="col">Energy Consumption</th>
+				<th scope="col">Water Usage</th>
+				<th scope="col">Date added</th>
+			</tr>
+	</thead>
+</table>
+<script>
+	function testingComm() {
+		$.get('/testData', function(data) {
+			console.log(data)
+		}, alert('did not work'));
+	};
+</script>
 {% endblock %}	
