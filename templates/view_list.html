@@ -5,6 +5,7 @@
 <p>This shows a list of all items that have been added already. Including impact information. Maybe also date and time of when it was added. Maybe some more statistics.</p>
 <br>
 <button onclick="testingComm()">Try</button>
+<!--
 <table class="table">
 	<thead>
 		<tr>
@@ -42,23 +43,80 @@
 		</tr>
 	</tfoot>
 </table>
-<table id='TestingT'>
-	<thead>
-			<tr>
-				<th scope="col">Food type</th>
-				<th scope="col">Amount</th>
-				<th scope="col">Global Warming Potential</th>
-				<th scope="col">Energy Consumption</th>
-				<th scope="col">Water Usage</th>
-				<th scope="col">Date added</th>
-			</tr>
-	</thead>
-</table>
+-->
+<div id = "NewTableElement"></div>
 <script>
 	function testingComm() {
-		$.get('/testData', function(data) {
-			console.log(data)
-		}, alert('did not work'));
+		$.get('/testData', {option: 'weekly'}, function(data) {
+			var parsedData = JSON.parse(data);
+			for (var i=0; i<parsedData.length; i++) {
+				displayTableBlock(parsedData[i], 'weekly');
+			}
+		});
 	};
+
+	function displayTableBlock(data, period) {
+		var groupNumber = Object.keys(data);
+		var groupLength = data[groupNumber].length;
+		var tableElement = document.createElement("div");
+		tableElement.id = groupNumber;
+		var table = document.createElement("table");
+		table.setAttribute("class", "table");
+		table.id = groupNumber;
+		tableElement.innerHTML = "Calender Week " + groupNumber.toString();
+		
+		// Adding the table head with the units
+		var header = table.createTHead();
+		var hrow = header.insertRow(-1);
+		hcategory = document.createElement("th");
+		hcategory.setAttribute("scope", "col");
+		hcategory.innerHTML = "Category";
+		hrow.appendChild(hcategory);
+		hamount = document.createElement("th");
+		hamount.setAttribute("scope", "col");
+		hamount.innerHTML = "Amount [kg]";
+		hrow.appendChild(hamount);
+		hglobalWarmingPotential = document.createElement("th");
+		hglobalWarmingPotential.setAttribute("scope", "col");
+		hglobalWarmingPotential.innerHTML = "Global Warming Potential [kg<sub>CO<sub>2</sub>eq</sub> / kg<sub>Product</sub>]";
+		hrow.appendChild(hglobalWarmingPotential);
+		henergyConsumption = document.createElement("th");
+		henergyConsumption.setAttribute("scope", "col");
+		henergyConsumption.innerHTML = "Energy Consumption [mJ / kg<sub>Product</sub>]";
+		hrow.appendChild(henergyConsumption);
+		hwaterUsage = document.createElement("th");
+		hwaterUsage.setAttribute("scope", "col");
+		hwaterUsage.innerHTML = "Water Usage [m<sup>3</sup> / kg<sub>Product</sub>]";
+		hrow.appendChild(hwaterUsage);
+		hdateAdded = document.createElement("th");
+		hdateAdded.setAttribute("scope", "col");
+		hdateAdded.innerHTML = "Date Added";
+		hrow.appendChild(hdateAdded);
+
+		// Adding the body with all the relevant information
+		var body = table.createTBody();
+		for (var j=0; j<groupLength; j++) {
+			var row = body.insertRow(-1);
+			var category = document.createElement("th");
+			category.setAttribute("scope", "row");
+			category.innerHTML = data[groupNumber][j].category;
+			row.appendChild(category);
+			var amount = row.insertCell(-1);
+			var globalWarmingPotential = row.insertCell(-1);
+			var energyConsumption = row.insertCell(-1);
+			var waterUsage = row.insertCell(-1);
+			var dateAdded = row.insertCell(-1);
+			amount.innerHTML = data[groupNumber][j].amount;
+			globalWarmingPotential.innerHTML = data[groupNumber][j].globalWarmingPotential;
+			energyConsumption.innerHTML = data[groupNumber][j].energyConsumption;
+			waterUsage.innerHTML = data[groupNumber][j].waterUsage;
+			dateAdded.innerHTML = data[groupNumber][j].dateAdded;
+		}
+
+		// Adding table to the div element
+		tableElement.appendChild(table);
+		document.getElementById("NewTableElement").appendChild(tableElement);
+		return
+	}; 
 </script>
 {% endblock %}	
